@@ -63,19 +63,11 @@ function setAboutMessage(_, { message }) {
   return (aboutMessage = message);
 }
 
-function issueAdd(_, { issue }) {
-  validateIssue(issue);
-  issue.created = new Date();
-  issue.id = issuesDB.length + 1;
-  issuesDB.push(issue);
-  return issue;
-}
-
 function issueList() {
   return issuesDB;
 }
 
-function validateIssue(_, { issue }) {
+function validateIssue(issue) {
   const errors = [];
 
   if (issue.title.length < 3) {
@@ -87,8 +79,16 @@ function validateIssue(_, { issue }) {
   }
 
   if (errors.length > 0) {
-    throw new UserInputError("Invalid input(s)", { erross });
+    throw new UserInputError("Invalid input(s)", { errors });
   }
+}
+
+function issueAdd(_, { issue }) {
+  validateIssue(issue);
+  issue.created = new Date();
+  issue.id = issuesDB.length + 1;
+  issuesDB.push(issue);
+  return issue;
 }
 
 const server = new ApolloServer({
