@@ -1,14 +1,14 @@
-class IssueFilter extends React.Component {
-  render() {
-    return <div>This is a placeholder for the issue filter.</div>;
-  }
-}
-
 const dateRegex = new RegExp("^\\d\\d\\d\\d-\\d\\d-\\d\\d");
 
 function jsonDateReviver(key, value) {
   if (dateRegex.test(value)) return new Date(value);
   return value;
+}
+
+class IssueFilter extends React.Component {
+  render() {
+    return <div>This is a placeholder for the issue filter.</div>;
+  }
 }
 
 function IssueRow(props) {
@@ -63,7 +63,6 @@ class IssueAdd extends React.Component {
       title: form.title.value,
       due: new Date(new Date().getTime() + 1000 * 60 * 60 * 24 * 10),
     };
-
     this.props.createIssue(issue);
     form.owner.value = "";
     form.title.value = "";
@@ -92,8 +91,8 @@ async function graphQLFetch(query, variables = {}) {
 
     if (result.errors) {
       const error = result.errors[0];
-      if (error.extensions.code === "BAD_USER_INPUT") {
-        const details = error.extensions.exception.errors.join("\n");
+      if (error.extensions.code == "BAD_USER_INPUT") {
+        const details = error.extensions.exception.errors.join("\n ");
         alert(`${error.message}:\n ${details}`);
       } else {
         alert(`${error.extensions.code}: ${error.message}`);

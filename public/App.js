@@ -26,6 +26,13 @@ function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Re
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
+var dateRegex = new RegExp("^\\d\\d\\d\\d-\\d\\d-\\d\\d");
+
+function jsonDateReviver(key, value) {
+  if (dateRegex.test(value)) return new Date(value);
+  return value;
+}
+
 var IssueFilter = /*#__PURE__*/function (_React$Component) {
   _inherits(IssueFilter, _React$Component);
 
@@ -46,13 +53,6 @@ var IssueFilter = /*#__PURE__*/function (_React$Component) {
 
   return IssueFilter;
 }(React.Component);
-
-var dateRegex = new RegExp("^\\d\\d\\d\\d-\\d\\d-\\d\\d");
-
-function jsonDateReviver(key, value) {
-  if (dateRegex.test(value)) return new Date(value);
-  return value;
-}
 
 function IssueRow(props) {
   var issue = props.issue;
@@ -164,8 +164,8 @@ function _graphQLFetch() {
             if (result.errors) {
               error = result.errors[0];
 
-              if (error.extensions.code === "BAD_USER_INPUT") {
-                details = error.extensions.exception.errors.join("\n");
+              if (error.extensions.code == "BAD_USER_INPUT") {
+                details = error.extensions.exception.errors.join("\n ");
                 alert("".concat(error.message, ":\n ").concat(details));
               } else {
                 alert("".concat(error.extensions.code, ": ").concat(error.message));
