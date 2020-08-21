@@ -1,3 +1,5 @@
+/* globals React ReactDOM PropTypes */
+
 const dateRegex = new RegExp("^\\d\\d\\d\\d-\\d\\d-\\d\\d");
 
 function jsonDateReviver(key, value) {
@@ -78,6 +80,10 @@ class IssueAdd extends React.Component {
     );
   }
 }
+
+IssueAdd.propTypes = {
+  createIssue: PropTypes.func.isRequired,
+};
 
 async function graphQLFetch(query, variables = {}) {
   try {
