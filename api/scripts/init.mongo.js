@@ -1,3 +1,7 @@
+/* global db print */
+/* eslint no-restricted-globals: "off" */
+/*eslint linebreak-style: ["error", "windows"]*/
+
 db.issues.remove({});
 
 const issuesDB = [

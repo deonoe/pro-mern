@@ -11,8 +11,7 @@ class IssueFilter extends React.Component {
   }
 }
 
-function IssueRow(props) {
-  const issue = props.issue;
+function IssueRow({ issue }) {
   return (
     <tr>
       <td>{issue.id}</td>
@@ -26,8 +25,8 @@ function IssueRow(props) {
   );
 }
 
-function IssueTable(props) {
-  const issueRows = props.issues.map((issue) => (
+function IssueTable({ issues }) {
+  const issueRows = issues.map((issue) => (
     <IssueRow key={issue.id} issue={issue} />
   ));
 
@@ -63,7 +62,8 @@ class IssueAdd extends React.Component {
       title: form.title.value,
       due: new Date(new Date().getTime() + 1000 * 60 * 60 * 24 * 10),
     };
-    this.props.createIssue(issue);
+    const { createIssue } = this.props;
+    createIssue(issue);
     form.owner.value = "";
     form.title.value = "";
   }
@@ -102,6 +102,7 @@ async function graphQLFetch(query, variables = {}) {
   } catch (e) {
     alert(`Error in sending data to server: ${e.message}`);
   }
+  return null;
 }
 
 class IssueList extends React.Component {
@@ -143,12 +144,13 @@ class IssueList extends React.Component {
   }
 
   render() {
+    const { issues } = this.state;
     return (
       <React.Fragment>
         <h1>Issue Tracker</h1>
         <IssueFilter />
         <hr />
-        <IssueTable issues={this.state.issues} />
+        <IssueTable issues={issues} />
         <hr />
         <IssueAdd createIssue={this.createIssue} />
       </React.Fragment>

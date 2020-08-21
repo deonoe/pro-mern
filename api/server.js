@@ -20,30 +20,20 @@ const GraphQLDate = new GraphQLScalarType({
   },
   parseValue(value) {
     const dateValue = new Date(value);
-    return isNaN(dateValue) ? undefined : dateValue;
+    return Number.isNaN(dateValue) ? undefined : dateValue;
   },
   parseLiteral(ast) {
     if (ast.kind == Kind.STRING) {
       const value = new Date(ast.value);
-      return isNaN(value) ? undefined : value;
+      return Number.isNaN(value) ? undefined : value;
     }
+    return undefined;
   },
 });
 
-const resolvers = {
-  Query: {
-    about: () => aboutMessage,
-    issueList,
-  },
-  Mutation: {
-    setAboutMessage,
-    issueAdd,
-  },
-  GraphQLDate,
-};
-
 function setAboutMessage(_, { message }) {
-  return (aboutMessage = message);
+  aboutMessage = message;
+  return aboutMessage;
 }
 
 async function issueList() {
@@ -77,9 +67,10 @@ async function getNextSequence(name) {
 
 async function issueAdd(_, { issue }) {
   issueValidate(issue);
-  issue.created = new Date();
-  issue.id = await getNextSequence("issues");
-  const result = await db.collection("issues").insertOne(issue);
+  const newIssue = Object.assign({}, issue);
+  newIssue.created = new Date();
+  newIssue.id = await getNextSequence("issues");
+  const result = await db.collection("issues").insertOne(newIssue);
   const savedIssue = await db
     .collection("issues")
     .findOne({ _id: result.insertedId });
@@ -95,6 +86,18 @@ async function connectToDb() {
   console.log("Connected to MongoDB at", url);
   db = client.db();
 }
+
+const resolvers = {
+  Query: {
+    about: () => aboutMessage,
+    issueList,
+  },
+  Mutation: {
+    setAboutMessage,
+    issueAdd,
+  },
+  GraphQLDate,
+};
 
 const server = new ApolloServer({
   typeDefs: fs.readFileSync("schema.graphql", "utf-8"),
@@ -114,10 +117,10 @@ server.applyMiddleware({ app, path: "/graphql", cors: enableCors });
 
 const port = process.env.API_SERVER_PORT || 3000;
 
-(async function () {
+(async function start() {
   try {
     await connectToDb();
-    app.listen(port, function () {
+    app.listen(port, () => {
       console.log(`API server started on port ${port}`);
     });
   } catch (err) {
