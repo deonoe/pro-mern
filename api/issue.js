@@ -4,7 +4,9 @@ const { getDb, getNextSequence } = require("./db");
 
 async function list() {
   const db = getDb();
-  const issues = await db.collection("issues").find({}).toArray();
+  // const filter = {};
+  // if (status) filter.status = status;
+  const issues = await db.collection("issues").find().toArray();
   return issues;
 }
 
