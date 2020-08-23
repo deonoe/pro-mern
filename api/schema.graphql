@@ -9,7 +9,7 @@ enum StatusType {
 
 type Issue {
   _id: ID!
-  id: Int
+  id: Int!
   title: String!
   status: StatusType!
   owner: String
@@ -31,7 +31,7 @@ input IssueInputs {
 
 type Query {
   about: String!
-  issueList: [Issue!]!
+  issueList(status: StatusType): [Issue!]!
 }
 type Mutation {
   setAboutMessage(message: String!): String
