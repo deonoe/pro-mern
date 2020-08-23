@@ -29,17 +29,17 @@ export default class IssueDetail extends React.Component {
   }
 
   async loadData() {
-    const {
-      match: {
-        params: { id },
-      },
-    } = this.props;
-
     const query = `query issue($id: Int!) {
       issue (id: $id) {
         id description
       }
     }`;
+
+    const {
+      match: {
+        params: { id },
+      },
+    } = this.props;
 
     const data = await graphQLFetch(query, { id });
     if (data) {

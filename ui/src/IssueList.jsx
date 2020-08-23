@@ -18,6 +18,7 @@ export default class IssueList extends React.Component {
   componentDidMount() {
     this.loadData();
   }
+
   componentDidUpdate(prevProps) {
     const {
       location: { search: prevSearch },
